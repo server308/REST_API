@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Random Dog Viewer</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 20px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            margin-top: 20px;
+            cursor: pointer;
+        }
+        .dog-images {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .dog-images img {
+            margin: 10px;
+            max-width: 300px;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+<h1>Random Dog Viewer</h1>
+<button id="randomDogButton">Показать случайные собаки</button>
+
+<div class="dog-images" id="dogImagesContainer">
+    <!-- Здесь будут отображаться картинки -->
+</div>
+<a href="/logout" class="logout">Выйти из аккаунта</a>
+<script>
+    const button = document.getElementById('randomDogButton');
+    const dogImagesContainer = document.getElementById('dogImagesContainer');
+
+    button.addEventListener('click', async () => {
+        try {
+            const response = await fetch('/random-dogs'); // Запрос к вашему API для получения списка изображений
+            if (!response.ok) {
+                throw new Error('Не удалось загрузить изображения.');
+            }
+
+            const imageUrls = await response.json(); // Получаем список URL изображений
+
+            // Очищаем контейнер перед добавлением новых картинок
+            dogImagesContainer.innerHTML = '';
+
+            // Добавляем каждое изображение в контейнер
+            imageUrls.forEach(url => {
+                const imgElement = document.createElement('img');
+                imgElement.src = url;
+                imgElement.alt = "Случайная собака";
+                dogImagesContainer.appendChild(imgElement);
+            });
+        } catch (error) {
+            alert('Ошибка: ' + error.message);
+        }
+    });
+</script>
+</body>
+</html>
